@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<vxml version="2.0" lang="en">
+<form id="intro">
+<block>
+	<prompt> Welcome to know your grades voice application. Please have the student I D ready for veri fication. </prompt>
+	<goto next="#home"/>
+</block>
+</form>
+
+<form id="home">
+	<field name="fld_student_name">	
+		<prompt> Please say the user name. </prompt>	
+		<grammar type="application/x-nuance-gsl" mode="voice">
+		<![CDATA[
+		[
+			[jesse]   {<fld_student_name "jesse">}
+			[whitney] {<fld_student_name "roger whitney">}
+			[rudolph] {<fld_student_name "wilma rudolph">}
+			[langdon] {<fld_student_name "robert langdon">}
+		]
+		]]>
+		</grammar>
+		
+		<noinput cond="true" count="1">
+			<prompt> Sorry. I did not hear you. </prompt>
+		</noinput>	
+		<noinput  cond="true" count="2">
+			<prompt> Sorry. I could not hear you again. Please say your name. </prompt>
+		</noinput>
+		<noinput  cond="true" count="3">
+			<prompt> I am sorry. There is no response. You are being transferred to the operator. </prompt>
+			<exit form="home"/>
+		</noinput>
+	
+		<nomatch count="1">
+			This student does not exist in our records. Please try again. 
+		</nomatch>        
+		<nomatch count="2">
+			I am sorry. I cannot find the student in our records. Please try again. 
+		</nomatch>        
+		<nomatch count="3">
+			I am sorry. You have exceeded the maximum number of attempts. Your call is being transferred to the opertaor for assistance. Thank you.
+		<clear namelist="fld_student_name"/> 
+		<exit form="home"/>
+		</nomatch>
+
+		<filled>
+			<prompt> The student is  <value expr="fld_student_name"/>. </prompt>
+		</filled>
+
+	</field>
+
+	<field name="fld_student_id">
+		<prompt> Now, please read out the student i d. </prompt>	
+		<grammar type="application/x-nuance-gsl" mode="voice">
+		<![CDATA[
+		[
+			[1 2 3 4]  {<fld_student_id "1 2 3 4">}
+			[2 3 4 1]  {<fld_student_id "2 3 4 1">}
+			[3 4 1 2]  {<fld_student_id "3 4 1 2">}
+			[4 1 2 3]  {<fld_student_id "4 1 2 3">}
+		]
+		]]>
+		</grammar>
+		
+		<noinput cond="true" count="1">
+			<prompt> Sorry. I did not hear you. </prompt>
+		</noinput>	
+		<noinput  cond="true" count="2">
+			<prompt> Sorry. I could not hear you again. Please say your password. </prompt>
+		</noinput>
+		<noinput  cond="true" count="3">
+			<prompt> I am sorry. There is no response. You are being transferred to the operator. </prompt>
+			<clear namelist="fld_student_name"/> 
+			<exit form="home"/>
+		</noinput>
+	
+		<nomatch count="1">
+			<prompt>This student i d does not match the user name. Please try again. </prompt>
+		</nomatch>        
+		<nomatch count="2">
+			<prompt> I am sorry. The student i d  does not match the user name in our records. Can you please try again. </prompt>
+		</nomatch>        
+		<nomatch count="3">
+			<prompt>I am sorry. You have exceeded the maximum number of attempts. 
+			Your call is being transferred to the opertaor for assistance. Thank you.</prompt>
+		<clear namelist="fld_student_name"/> 
+		<clear namelist="fld_student_id"/> 
+		<exit form="home"/>
+		</nomatch>
+	
+		<filled>
+			<clear namelist="fld_student_name"/> 
+			<clear namelist="fld_student_id"/>
+			<goto next="#fld_menu"/> 
+		</filled>
+	</field>
+	
+</form>
+
+<menu id="fld_menu" dtmf="true">
+    <prompt>
+      Please say Course, Term or G P A.
+    </prompt>
+
+    <!-- demo the next attribute -->
+	<choice next="#course_report" accept="approximate">course</choice>
+	
+    <choice next="#term_report" accept="approximate">term</choice> <!-- garbage -->
+
+    <choice next="#gpa_report" accept="approximate">G P A</choice>
+
+    <!-- demo the event attribute and explicit dtmf -->
+    <choice event="event.myapp.quit" dtmf="0">quit</choice>
+
+    <catch event="nomatch noinput help">
+      <reprompt /> <!-- Never use this -->
+    </catch>
+</menu>
+
+<form id="course_report">
+<block>
+	<prompt>Now lets know your grade for a particular course.</prompt>
+</block>
+
+	<field name="course">
+		<prompt> Please say the course name or the course i d. </prompt>
+		<grammar version = "1.0" mode = "voice" src="grammar_page.xml#course_names"/>
+		<grammar version = "1.0" mode = "voice" src="grammar_page.xml#course_ids"/>
+		
+		<!-- The user was silent, restart the field -->
+		<noinput cond="true" count="1">
+			<prompt> Sorry. I did not hear you. </prompt>
+		</noinput>
+
+		<noinput  cond="true" count="2">
+			<prompt> Sorry. I did not hear you again. Please say the course name or i d.</prompt>
+		</noinput>
+
+		<noinput  cond="true" count="3">
+			<prompt> I am sorry. There is no response. Your call is being transferred to the operator.</prompt>
+			<exit form="course_report"/>
+		</noinput>
+
+		<!-- The user said something that was not defined in our grammar -->
+		<nomatch count="1">
+			<prompt>Sorry that is an invalid value. Please try again.</prompt>
+		</nomatch>
+		
+		<nomatch count="2">
+			<prompt>I am sorry. That is an invalid value again. 
+			Please say a course name such as Software Engineering or say the course id such as C S five ten.</prompt>
+		</nomatch>
+		
+		<nomatch count="3">
+			<prompt>I am sorry. You have exceeded the maximum number of attempts to record a value. 
+			Your call is being transferred to the operator for assistance.</prompt>
+		<exit form="course_report"/>	
+		</nomatch>
+  
+	<filled namelist="course">		
+		<prompt> You have scored an A minus grade in <value expr="course"/>. </prompt>
+		<goto next="#exit_prompt"/>	
+	</filled>
+	</field>
+	
+</form>
+	
+<form id="exit_prompt">
+	<field name="confirm_exit">
+		<prompt>Do you wish to know your grades for other terms or courses. Please say yes to continue and no to exit the application. </prompt> 
+		<grammar type="application/x-nuance-gsl" mode="voice"> 
+			<![CDATA[ 
+			[
+				[yes] {<confirm_exit "yes">}
+				[no] {<confirm_exit "no">}
+			]
+			]]>
+		</grammar>
+			
+		<filled namelist="confirm_exit">
+			<if cond="confirm_exit=='no'"> 
+				<prompt>Thank you for using Know your grades application. Good Bye.</prompt>
+				<exit/> 
+			<else/> 
+				<clear namelist="confirm_exit"/> 
+				<goto next="#fld_menu"/> 
+			</if> 
+		</filled>
+	</field>
+</form>
+
+<form id="term_report">	
+	<field name="term">
+		<prompt> Please say the term name such as Fall. </prompt>
+		<grammar version = "1.0" mode = "voice" src="grammar_page.xml#term_seasons"/> 
+		
+		<noinput cond="true" count="1">
+			<prompt> Sorry. I did not hear you. </prompt>
+		</noinput>
+
+		<noinput  cond="true" count="2">
+			<prompt> Sorry. I did not hear you again. Please say the term name. </prompt>
+		</noinput>
+
+		<noinput  cond="true" count="3">
+			<prompt> I am sorry. There is no response. You are being transferred to the operator for assistance.</prompt>
+			<exit form="term_report"/>
+		</noinput>
+
+		<nomatch count="1">
+			<prompt>Sorry that is an invalid value. Please try again.</prompt>
+		</nomatch>
+  
+		<nomatch count="2">
+			<prompt>I am sorry. That is an invalid value again. Please say the term name such as Fall two thousand and twelve  </prompt>
+		</nomatch>
+		
+		<nomatch count="3">
+			<prompt>I am sorry. You have exceeded the maximum number of attempts to record a value. 
+			Your call is being transferred to the operator for assistance. </prompt>
+		<exit form="term_report"/>	
+		</nomatch>
+		
+		<filled namelist="term">		
+			<prompt> 
+				Courses and grades for <value expr="term"/>.
+				Spoken Language Interfaces. A. <break size="small"/>
+				Programming Languages. B minus. <break size="small"/>
+				Software Engineering. A. <break size="small"/>
+			</prompt>
+			
+		</filled>
+	</field>
+
+	<field name="term_gpa">
+		<prompt>Would you like to know your g p a for this term? </prompt> 
+		<grammar type="application/x-nuance-gsl" mode="voice"> 
+			<![CDATA[ 
+			[
+				[yes] {<term_gpa "yes">}
+				[no] {<term_gpa "no">}
+			]
+			]]>
+		</grammar>
+			
+		<filled namelist="term_gpa">
+			<if cond="term_gpa=='no'"> 
+				<goto next="#exit_prompt"/>
+			<else/>
+				<prompt> Your g p a for this term is 3.48. </prompt>
+				<goto next="#exit_prompt"/> 
+			</if> 
+		</filled>
+	</field>
+</form>
+
+<form id="gpa_report">
+<block>
+	<prompt>Your GPA for the entire degree is 3.48 out of 4.</prompt>
+	<goto next="#exit_prompt"/>
+</block>
+
+</form>
+</vxml>

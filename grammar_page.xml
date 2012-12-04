@@ -1,0 +1,65 @@
+<<<<<<< HEAD
+<?xml version="1.0" encoding="ISO-8859-1"?>
+	<grammar version="1.0" type="application/srgs+xml" root="initial_id" mode="voice">
+
+	<rule id="initial_id" />
+
+	<rule id="course_names" scope="public">
+		<one-of>
+		<item>Spoken Language Interface</item>
+		<item>Programming Languages</item>
+		<item>Software Engineering</item>
+		<item>Theory of Computation</item>
+		<item>Agile</item>
+		<item>Voice x m l</item>
+		</one-of>
+	</rule>
+	
+	<rule id="course_ids" scope="public">
+		<one-of>
+		<item>C S five ten</item>
+		<item>C S five hundred and ten</item>
+		<item>C S five five eight</item>
+		<item>C S five fifty eight</item>
+		<item>C S five hundred and fifty eight</item>
+		<item>C S five forty</item>
+		<item>C S five four zero</item>
+		<item>C S five hundred and forty</item>
+		</one-of>
+	</rule>
+	
+	<rule id="year" scope="public">
+		<one-of>
+		<item>Two thousand and twelve</item>
+		<item>Two thousand twelve</item>
+		<item>Twenty twelve</item>
+		<item>Two thousand and eleven</item>
+		<item>Two thousand eleven</item>
+		<item>Twenty eleven</item>
+		<item>Two thousand and ten</item>
+		<item>Two thousand ten</item>
+		<item>Twenty ten</item>
+		</one-of>
+	</rule>
+	
+	<rule id="term_numbers" scope="public">
+	<one-of>
+		<item> first </item>
+		<item> second </item>
+		<item> third </item>
+		<item> fourth </item>
+		<item> fifth </item>
+		<item> sixth </item>
+	</one-of>
+	</rule>
+
+	<rule id="term_seasons" scope="public">
+		<one-of>
+		<item> spring </item>
+		<item> summer </item>
+		<item> fall </item>
+		<item> winter </item>
+		</one-of>
+	</rule>
+
+</grammar>
