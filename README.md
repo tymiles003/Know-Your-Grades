@@ -21,3 +21,10 @@ Intended user of the application
 Students
 
 This project is written in xml and has been accomplished using Voxeo platform.
+
+The user can call the application using a phone or cell phone; following are the instructions for accessing the application via phone
+
+The user can call the number (408) 471-9490 and access the application.
+
+The Login details would be “jesse” for username and “1234” for id.
+
